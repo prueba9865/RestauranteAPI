@@ -4,12 +4,15 @@ import com.daw.restauranteapi.entities.Cliente;
 import com.daw.restauranteapi.entities.Mesa;
 import com.daw.restauranteapi.repositories.ClienteRepository;
 import com.daw.restauranteapi.repositories.MesaRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class MesaController {
@@ -29,7 +32,7 @@ public class MesaController {
      * Obtiene una mesa
      */
     @GetMapping("/mesas/{id}")
-    public ResponseEntity<Mesa> getMesa(@PathVariable Long id){
+    public ResponseEntity<?> getMesa(@PathVariable Long id){
         /*
         Optional<Empleado> empleado = empleadoRepository.findById(id);
         if (empleado.isPresent()) {
@@ -38,6 +41,14 @@ public class MesaController {
             return ResponseEntity.notFound().build(); // Devuelve el código 404 Not Found
         }
          */
+
+        if (id <= 0) {
+            Map<String,String> res = new HashMap();
+            res.put("error", "El numero no puede ser negativo");
+            // Si el id no es válido, devolvemos un error 400
+            return ResponseEntity.badRequest()
+                    .body(res);  // Se puede enviar un mensaje adicional en el cuerpo si lo deseas
+        }
 
         return mesaRepository.findById(id)
                 .map(mesa -> ResponseEntity.ok().body(mesa))    //Devuelve el código status 200 OK
@@ -48,7 +59,7 @@ public class MesaController {
      * Insertar una mesa (recibe los datos en el cuerpo (body) en formato JSON)
      */
     @PostMapping("/mesas")
-    public ResponseEntity<Mesa> insertMesa(@RequestBody Mesa mesa){
+    public ResponseEntity<Mesa> insertMesa(@RequestBody @Valid Mesa mesa){
         Mesa mesaGuardada = mesaRepository.save(mesa);
         return ResponseEntity.status(HttpStatus.CREATED).body(mesaGuardada);    //Devuelve el código status 201 Created
     }
@@ -57,7 +68,7 @@ public class MesaController {
      * Modifica una mesa
      */
     @PutMapping("/mesas/{id}")
-    public ResponseEntity<Mesa> editMesa(@PathVariable Long id, @RequestBody Mesa nuevaMesa){
+    public ResponseEntity<?> editMesa(@PathVariable Long id, @RequestBody @Valid Mesa nuevaMesa){
         /*
         Optional<Empleado> empleado = empleadoRepository.findById(id);
         if(empleado.isPresent()){
@@ -69,6 +80,14 @@ public class MesaController {
             return empleadoRepository.save(nuevoEmpleado);
         }
         */
+
+        if (id <= 0) {
+            Map<String,String> res = new HashMap();
+            res.put("error", "El numero no puede ser negativo");
+            // Si el id no es válido, devolvemos un error 400
+            return ResponseEntity.badRequest()
+                    .body(res);  // Se puede enviar un mensaje adicional en el cuerpo si lo deseas
+        }
 
         return mesaRepository.findById(id)
                 .map(mesa -> {
@@ -98,6 +117,13 @@ public class MesaController {
         }
         */
 
+        if (id <= 0) {
+            Map<String,String> res = new HashMap();
+            res.put("error", "El numero no puede ser negativo");
+            // Si el id no es válido, devolvemos un error 400
+            return ResponseEntity.badRequest()
+                    .body(res);  // Se puede enviar un mensaje adicional en el cuerpo si lo deseas
+        }
 
         return mesaRepository.findById(id)
                 .map(mesa -> {

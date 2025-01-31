@@ -7,6 +7,7 @@ import com.daw.restauranteapi.repositories.MesaRepository;
 import com.daw.restauranteapi.repositories.ReservaRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -18,7 +19,9 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class ReservaController {
@@ -38,7 +41,7 @@ public class ReservaController {
      * Obtiene una reserva
      */
     @GetMapping("/reservas/{id}")
-    public ResponseEntity<Reserva> getReserva(@PathVariable Long id){
+    public ResponseEntity<?> getReserva(@PathVariable Long id){
         /*
         Optional<Empleado> empleado = empleadoRepository.findById(id);
         if (empleado.isPresent()) {
@@ -47,6 +50,14 @@ public class ReservaController {
             return ResponseEntity.notFound().build(); // Devuelve el código 404 Not Found
         }
          */
+
+        if (id <= 0) {
+            Map<String,String> res = new HashMap();
+            res.put("error", "El numero no puede ser negativo");
+            // Si el id no es válido, devolvemos un error 400
+            return ResponseEntity.badRequest()
+                    .body(res);  // Se puede enviar un mensaje adicional en el cuerpo si lo deseas
+        }
 
         return reservaRepository.findById(id)
                 .map(reserva -> ResponseEntity.ok().body(reserva))    //Devuelve el código status 200 OK
@@ -57,7 +68,7 @@ public class ReservaController {
      * Insertar una reserva (recibe los datos en el cuerpo (body) en formato JSON)
      */
     @PostMapping("/reservas")
-    public ResponseEntity<Reserva> insertReserva(@RequestBody Reserva reserva){
+    public ResponseEntity<Reserva> insertReserva(@RequestBody @Valid Reserva reserva){
         // Validación simple de que horaInicio no sea mayor que horaFin
         if (reserva.getHoraInicio().compareTo(reserva.getHoraFin()) > 0) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null); // Invalid request
@@ -96,6 +107,14 @@ public class ReservaController {
         }
         */
 
+        if (id <= 0) {
+            Map<String,String> res = new HashMap();
+            res.put("error", "El numero no puede ser negativo");
+            // Si el id no es válido, devolvemos un error 400
+            return ResponseEntity.badRequest()
+                    .body(res);  // Se puede enviar un mensaje adicional en el cuerpo si lo deseas
+        }
+
 
         return reservaRepository.findById(id)
                 .map(reserva -> {
@@ -109,8 +128,7 @@ public class ReservaController {
      * Obtiene todas las reservas en base a una fecha exacta (formato: ddmmyyyy)
      */
     @GetMapping("/reservas/fecha/{fecha}")
-    public ResponseEntity<List<ReservaDTO>> getReservasByFecha(@PathVariable
-                                                                   @DateTimeFormat(pattern = "ddMMyyyy")
+    public ResponseEntity<?> getReservasByFecha(@PathVariable @DateTimeFormat(pattern = "ddMMyyyy")
                                                                    LocalDate fecha) {
         List<ReservaDTO> reservas = reservaRepository.findReservasByFecha(fecha);
         return ResponseEntity.ok(reservas);

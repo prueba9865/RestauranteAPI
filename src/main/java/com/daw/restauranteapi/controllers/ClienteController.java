@@ -2,13 +2,18 @@ package com.daw.restauranteapi.controllers;
 
 import com.daw.restauranteapi.entities.Cliente;
 import com.daw.restauranteapi.repositories.ClienteRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+
 
 @RestController
 public class ClienteController {
@@ -28,7 +33,7 @@ public class ClienteController {
      * Obtiene un cliente
      */
     @GetMapping("/clientes/{id}")
-    public ResponseEntity<Cliente> getCliente(@PathVariable Long id){
+    public ResponseEntity<?> getCliente(@PathVariable Long id){
         /*
         Optional<Empleado> empleado = empleadoRepository.findById(id);
         if (empleado.isPresent()) {
@@ -37,6 +42,14 @@ public class ClienteController {
             return ResponseEntity.notFound().build(); // Devuelve el código 404 Not Found
         }
          */
+
+        if (id <= 0) {
+            Map<String,String> res = new HashMap();
+            res.put("error", "El numero no puede ser negativo");
+            // Si el id no es válido, devolvemos un error 400
+            return ResponseEntity.badRequest()
+                    .body(res);  // Se puede enviar un mensaje adicional en el cuerpo si lo deseas
+        }
 
         return clienteRepository.findById(id)
                 .map(cliente -> ResponseEntity.ok().body(cliente))    //Devuelve el código status 200 OK
@@ -47,7 +60,7 @@ public class ClienteController {
      * Insertar un cliente (recibe los datos en el cuerpo (body) en formato JSON)
      */
     @PostMapping("/clientes")
-    public ResponseEntity<Cliente> insertCLiente(@RequestBody Cliente cliente){
+    public ResponseEntity<Cliente> insertCLiente(@RequestBody @Valid Cliente cliente){
         Cliente clienteGuardado = clienteRepository.save(cliente);
         return ResponseEntity.status(HttpStatus.CREATED).body(clienteGuardado);    //Devuelve el código status 201 Created
     }
@@ -56,7 +69,7 @@ public class ClienteController {
      * Modifica un cliente
      */
     @PutMapping("/clientes/{id}")
-    public ResponseEntity<Cliente> editCliente(@PathVariable Long id, @RequestBody Cliente nuevoCliente){
+    public ResponseEntity<?> editCliente(@PathVariable Long id, @RequestBody @Valid Cliente nuevoCliente){
         /*
         Optional<Empleado> empleado = empleadoRepository.findById(id);
         if(empleado.isPresent()){
@@ -68,6 +81,14 @@ public class ClienteController {
             return empleadoRepository.save(nuevoEmpleado);
         }
         */
+
+        if (id <= 0) {
+            Map<String,String> res = new HashMap();
+            res.put("error", "El numero no puede ser negativo");
+            // Si el id no es válido, devolvemos un error 400
+            return ResponseEntity.badRequest()
+                    .body(res);  // Se puede enviar un mensaje adicional en el cuerpo si lo deseas
+        }
 
         return clienteRepository.findById(id)
                 .map(cliente -> {
@@ -98,6 +119,13 @@ public class ClienteController {
         }
         */
 
+        if (id <= 0) {
+            Map<String,String> res = new HashMap();
+            res.put("error", "El numero no puede ser negativo");
+            // Si el id no es válido, devolvemos un error 400
+            return ResponseEntity.badRequest()
+                    .body(res);  // Se puede enviar un mensaje adicional en el cuerpo si lo deseas
+        }
 
         return clienteRepository.findById(id)
                 .map(cliente -> {

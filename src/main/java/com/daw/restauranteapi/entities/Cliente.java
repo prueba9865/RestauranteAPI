@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,12 +22,13 @@ public class Cliente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotBlank
+    @NotBlank(message = "El nombre no puede estar en blanco")
     private String nombre;
-    @NotBlank
+    @Pattern(regexp = "^\\+34 \\d{9}$", message = "El formato del número de teléfono debe ser '+34 123456789'")
     private String telefono;
     @Column(unique = true)
-    @Email
+    @Email(message = "Introduce un formato de email valido")
+    @NotBlank(message = "El email no puede estar en blanco")
     private String email;
 
     @OneToMany(targetEntity = Reserva.class, cascade = CascadeType.ALL,

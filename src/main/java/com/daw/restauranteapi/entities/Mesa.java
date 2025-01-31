@@ -25,7 +25,7 @@ public class Mesa {
     @NotNull(message = "El número de mesa no puede ser nulo")
     @Positive(message = "El número de mesa debe ser un valor positivo")
     private Long numeroMesa;
-    @NotBlank
+    @NotBlank(message = "La descripcion no debe estar en blanco")
     private String descripcion;
 
     @OneToMany(targetEntity = Reserva.class, cascade = CascadeType.ALL,
