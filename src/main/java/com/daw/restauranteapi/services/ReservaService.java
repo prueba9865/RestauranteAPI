@@ -1,7 +1,7 @@
 package com.daw.restauranteapi.services;
 
-import com.daw.restauranteapi.entities.Cliente;
-import com.daw.restauranteapi.repositories.ClienteRepository;
+import com.daw.restauranteapi.entities.Mesa;
+import com.daw.restauranteapi.repositories.MesaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -10,11 +10,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class ClienteService {
+public class ReservaService {
     @Autowired
-    private ClienteRepository clienteRepository;
+    private MesaRepository mesaRepository;
     
-    public ResponseEntity<?> obtenerCliente(Long id){
+    public ResponseEntity<?> obtenerMesa(Long id){
         if (id <= 0) {
             Map<String,String> res = new HashMap();
             res.put("error", "El numero no puede ser negativo");
@@ -23,12 +23,12 @@ public class ClienteService {
                     .body(res);  // Se puede enviar un mensaje adicional en el cuerpo si lo deseas
         }
 
-        return clienteRepository.findById(id)
-                .map(cliente -> ResponseEntity.ok().body(cliente))    //Devuelve el código status 200 OK
+        return mesaRepository.findById(id)
+                .map(mesa -> ResponseEntity.ok().body(mesa))    //Devuelve el código status 200 OK
                 .orElse(ResponseEntity.notFound().build());     //Devuelve el código 404 Not Found
     }
 
-    public ResponseEntity<?> editarCliente(Long id, Cliente nuevoCliente){
+    public ResponseEntity<?> editarMesa(Long id, Mesa nuevaMesa){
         if (id <= 0) {
             Map<String,String> res = new HashMap();
             res.put("error", "El numero no puede ser negativo");
@@ -37,19 +37,18 @@ public class ClienteService {
                     .body(res);  // Se puede enviar un mensaje adicional en el cuerpo si lo deseas
         }
 
-        return clienteRepository.findById(id)
-                .map(cliente -> {
-                    cliente.setNombre(nuevoCliente.getNombre());
-                    cliente.setTelefono(nuevoCliente.getTelefono());
-                    cliente.setEmail(nuevoCliente.getEmail());
-                    return ResponseEntity.ok(clienteRepository.save(cliente));    //Devuelve el código 200 OK y en el cuerpo del mensaje el nuevo empleado en JSON
+        return mesaRepository.findById(id)
+                .map(mesa -> {
+                    mesa.setNumeroMesa(nuevaMesa.getNumeroMesa());
+                    mesa.setDescripcion(nuevaMesa.getDescripcion());
+                    return ResponseEntity.ok(mesaRepository.save(mesa));    //Devuelve el código 200 OK y en el cuerpo del mensaje el nuevo empleado en JSON
                 })
                 .orElseGet(() -> {
                     return ResponseEntity.notFound().build();   //Devuelve el código 404 NotFound
                 });
     }
 
-    public ResponseEntity<?> borrarCliente(Long id){
+    public ResponseEntity<?> borrarMesa(Long id){
         if (id <= 0) {
             Map<String,String> res = new HashMap();
             res.put("error", "El numero no puede ser negativo");
@@ -58,9 +57,9 @@ public class ClienteService {
                     .body(res);  // Se puede enviar un mensaje adicional en el cuerpo si lo deseas
         }
 
-        return clienteRepository.findById(id)
-                .map(cliente -> {
-                    clienteRepository.delete(cliente);
+        return mesaRepository.findById(id)
+                .map(mesa -> {
+                    mesaRepository.delete(mesa);
                     return ResponseEntity.noContent().build();
                 })
                 .orElseGet(() -> ResponseEntity.notFound().build());
