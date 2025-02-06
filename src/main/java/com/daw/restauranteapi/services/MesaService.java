@@ -1,8 +1,6 @@
 package com.daw.restauranteapi.services;
 
-import com.daw.restauranteapi.entities.Cliente;
 import com.daw.restauranteapi.entities.Mesa;
-import com.daw.restauranteapi.repositories.ClienteRepository;
 import com.daw.restauranteapi.repositories.MesaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

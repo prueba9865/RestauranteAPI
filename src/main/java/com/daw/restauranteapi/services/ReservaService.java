@@ -1,20 +1,22 @@
 package com.daw.restauranteapi.services;
 
-import com.daw.restauranteapi.entities.Mesa;
-import com.daw.restauranteapi.repositories.MesaRepository;
+import com.daw.restauranteapi.entities.Reserva;
+import com.daw.restauranteapi.repositories.ReservaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
 public class ReservaService {
     @Autowired
-    private MesaRepository mesaRepository;
+    private ReservaRepository reservaRepository;
     
-    public ResponseEntity<?> obtenerMesa(Long id){
+    public ResponseEntity<?> obtenerReserva(Long id){
         if (id <= 0) {
             Map<String,String> res = new HashMap();
             res.put("error", "El numero no puede ser negativo");
@@ -23,32 +25,31 @@ public class ReservaService {
                     .body(res);  // Se puede enviar un mensaje adicional en el cuerpo si lo deseas
         }
 
-        return mesaRepository.findById(id)
-                .map(mesa -> ResponseEntity.ok().body(mesa))    //Devuelve el código status 200 OK
+        return reservaRepository.findById(id)
+                .map(reserva -> ResponseEntity.ok().body(reserva))    //Devuelve el código status 200 OK
                 .orElse(ResponseEntity.notFound().build());     //Devuelve el código 404 Not Found
     }
 
-    public ResponseEntity<?> editarMesa(Long id, Mesa nuevaMesa){
-        if (id <= 0) {
-            Map<String,String> res = new HashMap();
-            res.put("error", "El numero no puede ser negativo");
-            // Si el id no es válido, devolvemos un error 400
-            return ResponseEntity.badRequest()
-                    .body(res);  // Se puede enviar un mensaje adicional en el cuerpo si lo deseas
+    public ResponseEntity<Reserva> insertarReserva(Reserva reserva){
+        // Validación simple de que horaInicio no sea mayor que horaFin
+        if (reserva.getHoraInicio().compareTo(reserva.getHoraFin()) > 0) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null); // Invalid request
         }
 
-        return mesaRepository.findById(id)
-                .map(mesa -> {
-                    mesa.setNumeroMesa(nuevaMesa.getNumeroMesa());
-                    mesa.setDescripcion(nuevaMesa.getDescripcion());
-                    return ResponseEntity.ok(mesaRepository.save(mesa));    //Devuelve el código 200 OK y en el cuerpo del mensaje el nuevo empleado en JSON
-                })
-                .orElseGet(() -> {
-                    return ResponseEntity.notFound().build();   //Devuelve el código 404 NotFound
-                });
+        List<Reserva> reservasExistentes = reservaRepository.findConflictingReservations(
+                reserva.getFecha(),
+                reserva.getHoraInicio(),
+                reserva.getHoraFin());
+
+        if (!reservasExistentes.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+        }
+
+        reservaRepository.save(reserva);
+        return ResponseEntity.status(HttpStatus.CREATED).body(reserva);
     }
 
-    public ResponseEntity<?> borrarMesa(Long id){
+    public ResponseEntity<?> borrarReserva(Long id){
         if (id <= 0) {
             Map<String,String> res = new HashMap();
             res.put("error", "El numero no puede ser negativo");
@@ -57,9 +58,10 @@ public class ReservaService {
                     .body(res);  // Se puede enviar un mensaje adicional en el cuerpo si lo deseas
         }
 
-        return mesaRepository.findById(id)
-                .map(mesa -> {
-                    mesaRepository.delete(mesa);
+
+        return reservaRepository.findById(id)
+                .map(reserva -> {
+                    reservaRepository.delete(reserva);
                     return ResponseEntity.noContent().build();
                 })
                 .orElseGet(() -> ResponseEntity.notFound().build());

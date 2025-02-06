@@ -1,24 +1,17 @@
 package com.daw.restauranteapi.controllers;
 
 import com.daw.restauranteapi.DTO.LoginRequestDTO;
-import com.daw.restauranteapi.DTO.LoginResponseDTO;
 import com.daw.restauranteapi.DTO.UserRegisterDTO;
 import com.daw.restauranteapi.config.JwtTokenProvider;
-import com.daw.restauranteapi.entities.UserEntity;
 import com.daw.restauranteapi.repositories.UserEntityRepository;
 import com.daw.restauranteapi.services.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @RestController
 public class AuthController {

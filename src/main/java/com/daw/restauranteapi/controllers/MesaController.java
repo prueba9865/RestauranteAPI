@@ -1,8 +1,6 @@
 package com.daw.restauranteapi.controllers;
 
-import com.daw.restauranteapi.entities.Cliente;
 import com.daw.restauranteapi.entities.Mesa;
-import com.daw.restauranteapi.repositories.ClienteRepository;
 import com.daw.restauranteapi.repositories.MesaRepository;
 import com.daw.restauranteapi.services.MesaService;
 import jakarta.validation.Valid;
@@ -11,9 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 public class MesaController {
