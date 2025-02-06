@@ -55,7 +55,7 @@ public class ReservaController {
     }
 
     /**
-     * Obtiene todas las reservas en base a una fecha exacta (formato: ddmmyyyy)
+     * Obtiene todas las reservas en base a una fecha exacta (formato: ddmmyyyy) '/reservas/fecha/22122023'
      */
     @GetMapping("/reservas/fecha/{fecha}")
     public ResponseEntity<?> getReservasByFecha(@PathVariable @DateTimeFormat(pattern = "ddMMyyyy")
