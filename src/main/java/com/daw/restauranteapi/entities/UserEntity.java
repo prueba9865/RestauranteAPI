@@ -17,7 +17,7 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-public class UserEntity implements UserDetails{
+public class UserEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,13 +26,14 @@ public class UserEntity implements UserDetails{
     @Email(message = "El email no tiene el formato válido")
     @Column(unique = true)
     private String email;
+
     @Column(unique = true)
     private String username;
+
     private String password;
 
-
-    @Builder.Default    //Para que Lombok con el patrón builder cree el ArrayList
-    @ElementCollection(fetch = FetchType.EAGER) // Indica que esta lista se almacena en una tabla separada, pero sin una relación
+    @Builder.Default
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "user_authorities", joinColumns = @JoinColumn(name = "user_id"))
     private List<String> authorities = new ArrayList<>();
 

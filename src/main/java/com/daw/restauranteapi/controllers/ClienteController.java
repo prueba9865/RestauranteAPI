@@ -1,7 +1,9 @@
 package com.daw.restauranteapi.controllers;
 
 import com.daw.restauranteapi.entities.Cliente;
+import com.daw.restauranteapi.entities.UserEntity;
 import com.daw.restauranteapi.repositories.ClienteRepository;
+import com.daw.restauranteapi.repositories.UserEntityRepository;
 import com.daw.restauranteapi.services.ClienteService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +20,8 @@ public class ClienteController {
     private ClienteRepository clienteRepository;
     @Autowired
     private ClienteService clienteService;
-
+    @Autowired
+    private UserEntityRepository userRepository;
     /**
      * Obtener todos los clientes en un JSON
      */
@@ -40,11 +43,19 @@ public class ClienteController {
      * Insertar un cliente (recibe los datos en el cuerpo (body) en formato JSON)
      */
     @PostMapping("/clientes")
-    public ResponseEntity<Cliente> insertCLiente(@RequestBody @Valid Cliente cliente){
-        Cliente clienteGuardado = clienteRepository.save(cliente);
-        return ResponseEntity.status(HttpStatus.CREATED).body(clienteGuardado);    //Devuelve el código status 201 Created
-    }
+    public ResponseEntity<Cliente> insertCliente(@RequestBody @Valid Cliente cliente) {
+        // Verificar si el UserEntity existe y asignar el rol ROLE_USER
+        if (cliente.getUser() != null && cliente.getUser().getId() == null) {
+            UserEntity user = cliente.getUser();
+            user.setAuthorities(List.of("ROLE_USER")); // Asignar el rol automáticamente
+            UserEntity savedUser = userRepository.save(user); // Guardar el UserEntity
+            cliente.setUser(savedUser);
+        }
 
+        // Guardar el Cliente
+        Cliente clienteGuardado = clienteRepository.save(cliente);
+        return ResponseEntity.status(HttpStatus.CREATED).body(clienteGuardado);
+    }
     /**
      * Modifica un cliente
      */
