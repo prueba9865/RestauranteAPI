@@ -49,9 +49,10 @@ public class ReservaController {
     /**
      * Borra una reserva
      */
-    @DeleteMapping("/reservas/{id}")
-    public ResponseEntity<?> deleteReserva(@PathVariable Long id){
-        return reservaService.borrarReserva(id);
+    @DeleteMapping("/reservas/{idReserva}/{idCLiente}")
+    public ResponseEntity<?> deleteReserva(@PathVariable Long idReserva, @PathVariable Long idCLiente){
+
+        return reservaService.borrarReserva(idReserva, idCLiente);
     }
 
     /**

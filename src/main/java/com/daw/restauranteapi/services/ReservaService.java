@@ -49,8 +49,8 @@ public class ReservaService {
         return ResponseEntity.status(HttpStatus.CREATED).body(reserva);
     }
 
-    public ResponseEntity<?> borrarReserva(Long id){
-        if (id <= 0) {
+    public ResponseEntity<?> borrarReserva(Long idReserva, Long idCliente){
+        if (idReserva <= 0) {
             Map<String,String> res = new HashMap();
             res.put("error", "El numero no puede ser negativo");
             // Si el id no es válido, devolvemos un error 400
@@ -59,10 +59,14 @@ public class ReservaService {
         }
 
 
-        return reservaRepository.findById(id)
+        return reservaRepository.findById(idReserva)
                 .map(reserva -> {
-                    reservaRepository.delete(reserva);
-                    return ResponseEntity.noContent().build();
+                    if(idCliente.equals(reserva.getCliente().getId())) {
+                        reservaRepository.delete(reserva);
+                        return ResponseEntity.noContent().build();
+                    }
+                    //reservaRepository.delete(reserva);
+                    return ResponseEntity.badRequest().body("No tienes permiso para eliminar esta reserva");
                 })
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
