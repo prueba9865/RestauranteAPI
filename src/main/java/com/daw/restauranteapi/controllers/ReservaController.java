@@ -24,9 +24,9 @@ public class ReservaController {
      * Obtener todas las reservas en un JSON
      */
     @GetMapping("/reservas")
-    public ResponseEntity<List<Reserva>> getListReserva(){
-        List<Reserva> reservas = reservaRepository.findAll();
-        return ResponseEntity.ok(reservas);    //Devuelve el código status 200 OK
+    public ResponseEntity<List<Reserva>> getListReserva(@RequestParam Long clienteId) {
+        List<Reserva> reservas = reservaRepository.findByClienteId(clienteId); // Filtrar por ID de cliente
+        return ResponseEntity.ok(reservas); // Devuelve el código status 200 OK
     }
 
     /**

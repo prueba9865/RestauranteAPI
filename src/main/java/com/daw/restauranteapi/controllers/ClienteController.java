@@ -90,7 +90,7 @@ public class ClienteController {
             String token = this.tokenProvider.generateToken(auth);
 
             //Devolvemos un código 200 con el username y token JWT
-            return ResponseEntity.ok(new LoginResponseDTO(user.getUsername(), token));
+            return ResponseEntity.ok(new LoginResponseDTO(user.getId(), user.getUsername(), token));
         }catch (Exception e) {  //Si el usuario no es válido, salta una excepción BadCredentialsException
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
                     Map.of(

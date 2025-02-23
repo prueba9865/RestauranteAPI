@@ -37,4 +37,6 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
             "WHERE r.fecha = :fecha")
     List<ReservaDTO> findReservasByFecha(@Param("fecha") LocalDate fecha);
 
+    List<Reserva> findByClienteId(Long clienteId); // Buscar reservas por ID de cliente
+
 }

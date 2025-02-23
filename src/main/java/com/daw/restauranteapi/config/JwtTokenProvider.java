@@ -33,6 +33,7 @@ public class JwtTokenProvider {
 
         return Jwts.builder()
                 .subject(Long.toString(user.getId()))
+                .claim("id", user.getId())
                 .claim("email", user.getEmail())
                 .claim("username", user.getUsername())
                 .claim("role", authorities)
