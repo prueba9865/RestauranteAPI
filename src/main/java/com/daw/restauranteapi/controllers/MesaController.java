@@ -1,7 +1,6 @@
 package com.daw.restauranteapi.controllers;
 
 import com.daw.restauranteapi.entities.Mesa;
-import com.daw.restauranteapi.entities.Reserva;
 import com.daw.restauranteapi.repositories.MesaRepository;
 import com.daw.restauranteapi.repositories.ReservaRepository;
 import com.daw.restauranteapi.services.MesaService;
@@ -12,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
@@ -23,8 +21,6 @@ public class MesaController {
     private MesaRepository mesaRepository;
     @Autowired
     private MesaService mesaService;
-    @Autowired
-    private ReservaRepository reservaRepository;
 
     /**
      * Obtener todas las mesas en un JSON

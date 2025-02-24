@@ -1,26 +1,19 @@
 package com.daw.restauranteapi.controllers;
 
 import com.daw.restauranteapi.DTO.LoginRequestDTO;
-import com.daw.restauranteapi.DTO.LoginResponseDTO;
 import com.daw.restauranteapi.config.JwtTokenProvider;
 import com.daw.restauranteapi.entities.Cliente;
-import com.daw.restauranteapi.entities.UserEntity;
 import com.daw.restauranteapi.repositories.ClienteRepository;
 import com.daw.restauranteapi.repositories.UserEntityRepository;
 import com.daw.restauranteapi.services.ClienteService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 
 @RestController
@@ -29,14 +22,6 @@ public class ClienteController {
     private ClienteRepository clienteRepository;
     @Autowired
     private ClienteService clienteService;
-    @Autowired
-    private UserEntityRepository userRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private AuthenticationManager authenticationManager;
-    @Autowired
-    private JwtTokenProvider tokenProvider;
     /**
      * Obtener todos los clientes en un JSON
      */
