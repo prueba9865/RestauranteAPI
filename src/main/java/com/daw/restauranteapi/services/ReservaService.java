@@ -3,6 +3,8 @@ package com.daw.restauranteapi.services;
 import com.daw.restauranteapi.entities.Reserva;
 import com.daw.restauranteapi.repositories.ReservaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -69,5 +71,10 @@ public class ReservaService {
                     return ResponseEntity.badRequest().body("No tienes permiso para eliminar esta reserva");
                 })
                 .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    // Método para obtener reservas paginadas
+    public Page<Reserva> getReservas(Pageable pageable) {
+        return reservaRepository.findAll(pageable);
     }
 }

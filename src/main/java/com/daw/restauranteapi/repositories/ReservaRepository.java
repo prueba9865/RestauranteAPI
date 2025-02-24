@@ -3,6 +3,8 @@ package com.daw.restauranteapi.repositories;
 import com.daw.restauranteapi.DTO.ReservaDTO;
 import com.daw.restauranteapi.entities.Reserva;
 import com.daw.restauranteapi.entities.Mesa;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -38,5 +40,8 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
     List<ReservaDTO> findReservasByFecha(@Param("fecha") LocalDate fecha);
 
     List<Reserva> findByClienteId(Long clienteId); // Buscar reservas por ID de cliente
+
+    // Método para obtener todas las reservas con paginación
+    Page<Reserva> findAll(Pageable pageable);
 
 }

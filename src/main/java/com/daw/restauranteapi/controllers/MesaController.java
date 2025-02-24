@@ -1,6 +1,5 @@
 package com.daw.restauranteapi.controllers;
 
-import com.daw.restauranteapi.DTO.MesasDisponiblesResponseDTO;
 import com.daw.restauranteapi.entities.Mesa;
 import com.daw.restauranteapi.entities.Reserva;
 import com.daw.restauranteapi.repositories.MesaRepository;

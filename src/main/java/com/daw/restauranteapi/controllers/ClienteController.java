@@ -59,47 +59,12 @@ public class ClienteController {
      */
     @PostMapping("/clientes/register")
     public ResponseEntity<Cliente> registerCliente(@RequestBody @Valid Cliente cliente) {
-        // Verificar si el UserEntity existe y asignar el rol ROLE_USER
-        if (cliente.getUser() != null && cliente.getUser().getId() == null) {
-            UserEntity user = cliente.getUser();
-            String nombre = cliente.getUser().getUsername();
-            System.out.println(nombre);
-            user.setUsername(user.getUsername());
-            user.setAuthorities(List.of("ROLE_USER")); // Asignar el rol automáticamente
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-            UserEntity savedUser = userRepository.save(user); // Guardar el UserEntity
-            cliente.setUser(savedUser);
-        }
-
-        // Guardar el Cliente
-        Cliente clienteGuardado = clienteRepository.save(cliente);
-        return ResponseEntity.status(HttpStatus.CREATED).body(clienteGuardado);
+        return clienteService.registrarCliente(cliente);
     }
 
     @PostMapping("/clientes/login")
     public ResponseEntity<?> loginCliente(@RequestBody @Valid LoginRequestDTO loginDTO) {
-        try {
-
-            //Validamos al usuario en Spring (hacemos login manualmente)
-            UsernamePasswordAuthenticationToken userPassAuthToken = new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword());
-            Authentication auth = authenticationManager.authenticate(userPassAuthToken);    //valida el usuario y devuelve un objeto Authentication con sus datos
-            //Obtenemos el UserEntity del usuario logueado
-            UserEntity user = (UserEntity) auth.getPrincipal();
-
-            //Generamos un token con los datos del usuario (la clase tokenProvider ha hemos creado nosotros para no poner aquí todo el código
-            String token = this.tokenProvider.generateToken(auth);
-
-            //Devolvemos un código 200 con el username y token JWT
-            return ResponseEntity.ok(new LoginResponseDTO(user.getId(), user.getUsername(), token));
-        }catch (Exception e) {  //Si el usuario no es válido, salta una excepción BadCredentialsException
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
-                    Map.of(
-                            "path", "/auth/login",
-                            "message", "Credenciales erróneas",
-                            "timestamp", new Date()
-                    )
-            );
-        }
+        return clienteService.logearCliente(loginDTO);
     }
     /**
      * Modifica un cliente
